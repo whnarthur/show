@@ -54,8 +54,8 @@
             minZoom: 5
         }),
         imga = L.tileLayer.chinaProvider('TianDiTu.Satellite.Annotion', {
-            maxZoom: 18,
-            minZoom: 5
+            maxZoom: 26,
+            minZoom: 3
         });
 
     var normal = L.layerGroup([normalm, normala]),
@@ -64,27 +64,27 @@
      * 谷歌
      */
     var normalMap = L.tileLayer.chinaProvider('Google.Normal.Map', {
-            maxZoom: 18,
-            minZoom: 5
+            maxZoom: 26,
+            minZoom: 3
         }),
         satelliteMap = L.tileLayer.chinaProvider('Google.Satellite.Map', {
-            maxZoom: 18,
-            minZoom: 5
+            maxZoom: 26,
+            minZoom: 3
         });
     /**
      * 高德地图
      */
     var Gaode = L.tileLayer.chinaProvider('GaoDe.Normal.Map', {
-        maxZoom: 18,
-        minZoom: 5
+        maxZoom: 26,
+        minZoom: 3
     });
     var Gaodimgem = L.tileLayer.chinaProvider('GaoDe.Satellite.Map', {
-        maxZoom: 18,
-        minZoom: 5
+        maxZoom: 26,
+        minZoom: 3
     });
     var Gaodimga = L.tileLayer.chinaProvider('GaoDe.Satellite.Annotion', {
-        maxZoom: 18,
-        minZoom: 5
+        maxZoom: 26,
+        minZoom: 3
     });
     var Gaodimage = L.layerGroup([Gaodimgem, Gaodimga]);
 
