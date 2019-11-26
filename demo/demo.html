@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>栅格瓦片切换</title>
+    <meta charset="utf-8">
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="OpenLayers/v5.2.0-dist/ol.css" type="text/css">
+    <style>
+        .map {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .buttons {
+            position: absolute;
+            left: 0px; top: 0px;
+            float: left;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .buttons > li {
+            background: #990033;
+            list-style-type: none;
+            height: 25px;
+            color: white;
+            padding: 5px;
+        }
+        body {
+            margin: 0px;
+        }
+    </style>
+
+  </head>
+
+  <body>
+  <tr>
+    <td width="250px">图层id:<INPUT TYPE="text" id="lid_" style="width:250px"><br/>取图url:<INPUT TYPE="text" id="urlp_" style="width:250px"><br/>其他参数:<INPUT TYPE="text" id="otp_" style="width:250px"><br/><a href="javascript:addNewtle(11);"><font size="5"  color="#00ff00">打开叠加图层</font></a><br/><div ><font size="6"  color="#ff0000">Z:</font><font size="6" id="zoomshow" color="#00ff00"></font></div><a href="javascript:delNewtle(11);"> <font size="5"  color="#ff0000">关闭叠加图层</font></a><br/><font  id="urls_" color="#00ff00" style="display:none"></font><br/><br/><br/><br/>经度<INPUT TYPE="text" id="x_" style="width:150px"><br/>纬度<INPUT TYPE="text" id="y_" style="width:150px"><br/><INPUT TYPE="button" VALUE="GO" ONCLICK="setXY()"></td>
+    <!--        <td height="100%"><div id="map_canvas" ></div></td>-->
+  </tr>
+  <table width="100%" height="100%" >
+
+    <div id="map" class="map">
+
+    </div>
+
+  </body>
+
+    <script src="OpenLayers/v5.2.0-dist/ol.js"></script>
+    <script type="text/javascript">
+        var mapSources = {
+            mre默认地图: "http://192.168.5.32:20590/tile?mid=dianyun&get=fusion_task_cache&cache=off&x={x}&y={y}&z={z}",
+            OpenLayers默认地图: "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            谷歌地图: "http://mt2.google.cn/vt/lyrs=m&scale=1&hl=zh-CN&gl=cn&x={x}&y={y}&z={z}",
+            天地图: "http://t4.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}",
+            ArcGIS影像地图: "https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+        };
+
+        var layers = [];
+        layers.push(new ol.layer.Tile({
+          visible: true,
+          title: 0,
+          source: new ol.source.XYZ({
+            url: "http://mt2.google.cn/vt/lyrs=m&scale=1&hl=zh-CN&gl=cn&x={x}&y={y}&z={z}"
+          })
+        }));
+
+
+        function tileClick(e) {
+            for (let l = 0; l < layers.length; l++) {
+            if (layers[l].values_.title === e.innerText)
+                layers[l].setVisible(true);
+            else
+                layers[l].setVisible(false);
+            }
+        }
+
+        var map = new ol.Map({
+            layers: layers,
+            target: "map",
+            view: new ol.View({
+                center: [0, 0],
+                zoom: 10
+            })
+        });
+
+        var to = ol.proj.fromLonLat([Number(116.46915435791), Number(39.9959283437361)]);
+        var view = map.getView();
+        // 设置地图等级
+        view.setZoom(22);
+        view.animate({
+            center: to,
+            duration: 0
+        });
+
+        zoomshow.innerHTML=map.getView().getZoom();
+
+        map.on("moveend",function(e){
+          var zoom = map.getView().getZoom();  //获取当前地图的缩放级别
+          zoomshow.innerHTML=map.getView().getZoom();
+        });
+
+        function setXY()
+        {
+          var to = ol.proj.fromLonLat([Number(document.getElementById("x_").value), Number(document.getElementById("y_").value)]);
+          view.animate({
+            center: to,
+            duration: 0
+          });
+          // map.setCenter(new GLatLng(document.getElementById("y_").value, document.getElementById("x_").value));
+        }
+
+        var fusionTaskId = document.getElementById("lid_").value = "topview";
+        var urlp = document.getElementById("urlp_").value = "http://192.168.5.32:20590/tile";
+        var otp = document.getElementById("otp_").value = "get=fusion_task_cache&cache=off";
+        var x = document.getElementById("x_").value = "116.46915435791";
+        var y = document.getElementById("y_").value = "39.9959283437361";
+
+
+
+        var f=1 ;
+        var mre_layer;
+
+        function addNewtle(tid)
+        {
+          if(f==1)
+          {
+            lid = document.getElementById("lid_").value ;//= "test";
+            urlp = document.getElementById("urlp_").value ;//= "http://172.17.40.98/tile.py";
+            otp = document.getElementById("otp_").value ;//="get=map&cache=off&red=off"
+            var urls = urlp+'?fusionTaskId='+lid+'&'+otp+"&x={x}&y={y}&z={z}";
+            document.getElementById("urls_").innerHTML=urls ;
+
+            mre_layer = new ol.layer.Tile({
+              visible: true,
+              title: 1,
+              source: new ol.source.XYZ({
+                url: urls
+              })
+            });
+
+            map.addLayer(mre_layer);
+            f=0;
+          }
+        }
+
+        function delNewtle(tid)
+        {
+          if ( f == 0)
+          {
+            map.removeLayer(mre_layer)
+            f=1;
+          }
+        }
+
+    </script>
+</html>
