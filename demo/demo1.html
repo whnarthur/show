@@ -97,6 +97,8 @@
   });
 
 
+
+
   layers.push(new ol.layer.Tile({
     visible: true,
     title: 0,
@@ -104,6 +106,10 @@
       url: "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"
     })
   }));
+
+  layers.push(vectorLayer);
+
+
 
 
   function tileClick(e) {
@@ -125,6 +131,7 @@
   });
 
   var to = ol.proj.fromLonLat([Number(116.4731784), Number(39.9934093)]);
+  // var to = ol.proj.fromLonLat([Number(116.467695236206), Number(39.9970461533093)]);
   var view = map.getView();
   // 设置地图等级
   view.setZoom(22);
@@ -153,27 +160,8 @@
   var fusionTaskId = document.getElementById("lid_").value = "topview";
   var urlp = document.getElementById("urlp_").value = "http://192.168.2.199:20590/tile";
   var otp = document.getElementById("otp_").value = "get=fusion_task_cache&cache=off";
-  var x = document.getElementById("x_").value = "116.4731784";
-  var y = document.getElementById("y_").value = "39.9934093";
-
-  lid = document.getElementById("lid_").value; //= "test";
-  urlp = document.getElementById("urlp_").value; //= "http://172.17.40.98/tile.py";
-  otp = document.getElementById("otp_").value; //="get=map&cache=off&red=off"
-  var urls = urlp + '?fusionTaskId=' + lid + '&' + otp + "&x={x}&y={y}&z={z}";
-  document.getElementById("urls_").innerHTML = urls;
-
-  mre_layer = new ol.layer.Tile({
-    visible: true,
-    title: 1,
-    source: new ol.source.XYZ({
-      url: urls
-    })
-  });
-
-  // layers.push(vectorLayer);
-
-  map.addLayer(mre_layer);
-  map.addLayer(vectorLayer);
+  var x = document.getElementById("x_").value = "116.43056304";
+  var y = document.getElementById("y_").value = "39.98772328";
 
 
   // var styles = new ol.StyleMap({
